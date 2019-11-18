@@ -28,6 +28,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.delegate = self
         sceneView.scene.physicsWorld.contactDelegate = self
         
+        // MARK: _____ Disable default lighting in scene _____
+        sceneView.autoenablesDefaultLighting = false
+        
         // MARK: _____ Collision detection body types _____
         enum BodyType: Int {
             case planet = 1
@@ -36,15 +39,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         // MARK: ______ Creating planets as 3D objects _____
         let sun = SCNSphere(radius: 0.7)
-//        let mercury = SCNSphere(radius: 0.4)
-        let mercury = SCNSphere(radius: 0.3)
-        let venus = SCNSphere(radius: 0.35)
-        let earth = SCNSphere(radius: 0.03)
-        let mars = SCNSphere(radius: 0.3)
-        let jupiter = SCNSphere(radius: 0.3)
-        let saturn = SCNSphere(radius: 0.2)
-        let uranus = SCNSphere(radius: 0.2)
-        let neptune = SCNSphere(radius: 0.23)
+        let mercury = SCNSphere(radius: 0.2)
+        let venus = SCNSphere(radius: 0.3)
+        let earth = SCNSphere(radius: 0.3)
+        let mars = SCNSphere(radius: 0.2)
+        let jupiter = SCNSphere(radius: 1.2)
+        let saturn = SCNSphere(radius: 1.0)
+        let uranus = SCNSphere(radius: 0.8)
+        let neptune = SCNSphere(radius: 0.9)
         
         // MARK:_____ Adding texture maps to planets _____
         let materialSun = SCNMaterial()
@@ -84,7 +86,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         neptune.materials = [materialNeptune]
         
         // MARK:_____ Creating points in space where the 3D objects will be shown at _____
+        let sunLight = SCNLight()
+        sunLight.type = .omni
+        sunLight.intensity = 2000
+        
         let locationSun = SCNNode()
+        locationSun.light = sunLight
         locationSun.name = "Sun"
         locationSun.position = SCNVector3(x: 0, y: 0.0, z: -10.0)
         locationSun.geometry = sun
@@ -211,7 +218,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         anchorLocationNeptune .addChildNode(locationNeptune)
         
         
-        // MARK: _____ Rotate function to create orbits _____
+        // MARK: _____  Fast Rotation _____
         // Rotates the Achors which will create the orbits of the planets
         // 6.28318521 rads = 360°
 //        let fullRound = CGFloat(6.28318531)
@@ -225,16 +232,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
 //        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 84)))
 //        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 164.8)))
         
-//        let fullRound = CGFloat(6.28318531)
-//        let earthSpeed = 3.0
-//        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.2)))
-//        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.6)))
-//        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
-//        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
-//        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 6.9)))
-//        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 12.5)))
-//        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.0)))
-//        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 7.9)))
+        // MARK: _____  Slower rotation _____
+        let fullRound = CGFloat(6.28318531)
+        let earthSpeed = 3.0
+        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.2)))
+        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.6)))
+        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
+        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
+        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 6.9)))
+        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 12.5)))
+        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.0)))
+        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 7.9)))
         
         
         // MARK: _____ Placing planet anchors as child components to the root _____
@@ -357,88 +365,122 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     }
     
     func explosion(position: SCNVector3, planetSize: CGFloat) {
-        
         // MARK: _____ Creating a particle system for explosion effect _____
-        
         let exp = SCNParticleSystem()
+        exp.loops = false
         exp.isAffectedByGravity = false
         exp.isLightingEnabled = true
         exp.birthDirection = .random
-        exp.particleSize = 0.01
-        exp.birthRate = 100000
-        exp.emissionDuration = 1
-        exp.emitterShape = SCNSphere(radius: 0.01)
-        exp.particleLifeSpan = 3
+        exp.particleSize = 0.009
+        exp.birthRate = 3000
+        exp.emissionDuration = 0.0
+        exp.particleLifeSpan = 5
+        
+ //       exp.emitterShape = SCNSphere(radius: planetSize / 5)
         
         // MARK: _____ Adjusting the explosion size according to planet radius _____
-        exp.particleVelocity = 2 / planetSize
-        exp.particleColor = UIColor.yellow
+        exp.particleVelocity = 1.5 * planetSize
+    //    exp.particleColor = UIColor.white
         
         let explosionNode = SCNNode()
+        let lightNode = SCNNode()
         
-        _ = SCNAction.customAction(duration: 3) { (explosionNode, _) in
-            explosionNode.light?.attenuationStartDistance = 1000
-            explosionNode.light?.attenuationEndDistance = 0
-        }
-        
-    //    explosionNode.light?.intensity = 1000
+        lightNode.light = SCNLight()
+        lightNode.light?.type = .omni
+        lightNode.position = position
+        lightNode.light?.intensity = 0
+
         explosionNode.addParticleSystem(exp)
         explosionNode.position = position
+        
+        // MARK: _____ Animating explosion _____
+        let intensityAnimation = CABasicAnimation (keyPath: "light.intensity")
+        intensityAnimation.fromValue = 2500
+        intensityAnimation.toValue = 0
+        intensityAnimation.duration = 6
+        lightNode.addAnimation(intensityAnimation, forKey: nil)
+
+        let temperatureAnimation = CABasicAnimation (keyPath: "light.temperature")
+        temperatureAnimation.fromValue = 4800
+        temperatureAnimation.toValue = 1500
+        temperatureAnimation.duration = 6
+        lightNode.addAnimation(temperatureAnimation, forKey: nil)
+        
+        self.sceneView.scene.rootNode.addChildNode(lightNode)
         self.sceneView.scene.rootNode.addChildNode(explosionNode)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             print("Removing explosion node from scene")
             explosionNode.removeFromParentNode()
-            
+            lightNode.removeFromParentNode()
         }
         
         // MARK: _____ Creating a random amount of debris meteors from the explosion _____
         DispatchQueue.global(qos: .background).async {
-            
+
             // Random value for how many debree parts will be spawned from explosion
             let amountOfRocks = Int.random(in: 5..<20)
+            let sizeFactor = 500.0
+ 
             for _ in 0...amountOfRocks {
-                
+
                 let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
                 var meteorNode = SCNNode()
                 meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
-                
+
                 // Adjusting the debree size depending on how many parts there are
-                switch amountOfRocks {
-                case 0:
-                    print("No rocks spawned")
-                    
-                case 5..<10:
-                    let randomSize = CGFloat.random(in: 0.0001 ..< 0.0005)
-                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
-                    
-                case 11..<15:
-                    let randomSize = CGFloat.random(in: 0.00005 ..< 0.00009)
-                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
-                    
-                case 16..<20:
-                    let randomSize = CGFloat.random(in: 0.00001 ..< 0.00005)
-                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
-                    
-                default:
-                    print("This is the default case")
-                }
                 
+                let debreeSize = Double(planetSize) / Double(amountOfRocks) / sizeFactor
+                meteorNode.scale = SCNVector3(debreeSize, debreeSize, debreeSize)
+                
+                
+//                switch amountOfRocks {
+//                case 0:
+//                    print("No rocks spawned")
+//
+//                    // Scale in shoot function = 0.0001
+//
+//                    // ToDo
+//
+//                    // 1. Calculate min and max size of debress parts
+//                    // 2. Randomize debreee size based on planet size and amount of debree spawned
+//
+//                case 5...10:
+//
+//                    let minSize = Double(planetSize) / Double(amountOfRocks) / sizeFactor
+//                    let maxSize = minSize + 5
+//                    let randomSize = CGFloat.random(in: 0.0001 ..< 0.0005)
+//                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
+//
+//                case 11...15:
+//                    let randomSize = CGFloat.random(in: 0.00005 ..< 0.00009)
+//                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
+//
+//                case 16...20:
+//                    let randomSize = CGFloat.random(in: 0.00001 ..< 0.00005)
+//                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
+//
+//                default:
+//                    print("This is the default case")
+//                }
+
                 // MARK: _____ Giving the created debris physics _____
                 meteorNode.name = "Meteor"
                 meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
                 meteorNode.physicsBody?.isAffectedByGravity = false
+                print(position)
                 meteorNode.position = position
                 meteorNode.physicsBody?.applyForce (SCNVector3(CGFloat.random(in: -1 ..< 1), CGFloat.random(in: -1 ..< 1), CGFloat.random(in: -1 ..< 1)),  asImpulse: true)
-                
+
                 // Adding the debris meteor into the scene
                 self.sceneView.scene.rootNode.addChildNode(meteorNode)
-                
+                print(meteorNode.position)
+
                 // MARK: _____ Removing projectiles from scene after a set amount of time _____
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                     print("Removing projectile from scene")
                     meteorNode.removeFromParentNode()
-                    
+
                 }
             }
         }
