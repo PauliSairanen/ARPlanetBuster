@@ -36,10 +36,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         // MARK: ______ Creating planets as 3D objects _____
         let sun = SCNSphere(radius: 0.7)
-        let mercury = SCNSphere(radius: 0.03)
-        let venus = SCNSphere(radius: 0.095)
-        let earth = SCNSphere(radius: 0.06)
-        let mars = SCNSphere(radius: 0.053)
+//        let mercury = SCNSphere(radius: 0.4)
+        let mercury = SCNSphere(radius: 0.3)
+        let venus = SCNSphere(radius: 0.35)
+        let earth = SCNSphere(radius: 0.03)
+        let mars = SCNSphere(radius: 0.3)
         let jupiter = SCNSphere(radius: 0.3)
         let saturn = SCNSphere(radius: 0.2)
         let uranus = SCNSphere(radius: 0.2)
@@ -95,27 +96,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         let locationMercury = SCNNode()
         locationMercury.name = "Mercury"
-        locationMercury.position = SCNVector3(x: Float(sun.radius) + 1, y: 0 , z: 0)
+        locationMercury.position = SCNVector3(x: Float(sun.radius) + 1, y: 0, z: 0 )
         locationMercury.geometry = mercury
         locationMercury.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationMercury.physicsBody?.isAffectedByGravity = false
-        locationMercury.physicsBody?.categoryBitMask = BodyType.planet.rawValue
-        locationMercury.physicsBody?.collisionBitMask = BodyType.projectile.rawValue
-        locationMercury.physicsBody?.categoryBitMask = BodyType.projectile.rawValue
+        locationMercury.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
+        locationMercury.physicsBody?.collisionBitMask = BodyType.projectile.rawValue     // Defines the category which causes collisions
+        locationMercury.physicsBody?.contactTestBitMask = BodyType.projectile.rawValue
         
         let locationVenus = SCNNode()
         locationVenus.name = "Venus"
-        locationVenus.position = SCNVector3(x: Float(sun.radius) + 2, y: 0, z: 0)
+        locationVenus.position = SCNVector3(x: Float(sun.radius) + 2, y: 0, z: 0 )
         locationVenus.geometry = venus
         locationVenus.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationVenus.physicsBody?.isAffectedByGravity = false
-        locationVenus.physicsBody?.categoryBitMask = BodyType.planet.rawValue
-        locationVenus.physicsBody?.collisionBitMask = BodyType.projectile.rawValue
-        locationVenus.physicsBody?.categoryBitMask = BodyType.projectile.rawValue
+        locationVenus.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
+        locationVenus.physicsBody?.collisionBitMask = BodyType.projectile.rawValue     // Defines the category which causes collisions
+        locationVenus.physicsBody?.contactTestBitMask = BodyType.projectile.rawValue
+        
         
         let locationEarth = SCNNode()
         locationEarth.name = "Earth"
-        locationEarth.position = SCNVector3(x: 0, y: 0, z: Float(sun.radius) + 3)
+        locationEarth.position = SCNVector3(x: Float(sun.radius) + 3, y: 0, z: 0 )
         locationEarth.geometry = earth
         locationEarth.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationEarth.physicsBody?.isAffectedByGravity = false
@@ -125,13 +127,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         let locationMars = SCNNode()
         locationMars.name = "Mars"
-        locationMars.position = SCNVector3(x: Float(sun.radius) + 3.5, y: 0, z:0)
+        locationMars.position = SCNVector3(x: Float(sun.radius) + 3.5, y: 0, z: 0 )
         locationMars.geometry = mars
         locationMars.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationMars.physicsBody?.isAffectedByGravity = false
-        locationMars.physicsBody?.categoryBitMask = BodyType.planet.rawValue
-        locationMars.physicsBody?.collisionBitMask = BodyType.projectile.rawValue
-        locationMars.physicsBody?.categoryBitMask = BodyType.projectile.rawValue
+        locationMars.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
+        locationMars.physicsBody?.collisionBitMask = BodyType.projectile.rawValue     // Defines the category which causes collisions
+        locationMars.physicsBody?.contactTestBitMask = BodyType.projectile.rawValue
         
         let locationJupiter = SCNNode()
         locationJupiter.name = "Jupiter"
@@ -212,16 +214,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         // MARK: _____ Rotate function to create orbits _____
         // Rotates the Achors which will create the orbits of the planets
         // 6.28318521 rads = 360°
-        let fullRound = CGFloat(6.28318531)
-        let earthSpeed = 1.0
-        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 0.2)))
-        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 0.6)))
-        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
-        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
-        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 11.9)))
-        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 29.5)))
-        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 84)))
-        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 164.8)))
+//        let fullRound = CGFloat(6.28318531)
+//        let earthSpeed = 1.0
+//        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 0.2)))
+//        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 0.6)))
+//        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
+//        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
+//        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 11.9)))
+//        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 29.5)))
+//        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 84)))
+//        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 164.8)))
+        
+//        let fullRound = CGFloat(6.28318531)
+//        let earthSpeed = 3.0
+//        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.2)))
+//        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.6)))
+//        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
+//        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
+//        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 6.9)))
+//        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 12.5)))
+//        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.0)))
+//        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 7.9)))
         
         
         // MARK: _____ Placing planet anchors as child components to the root _____
@@ -309,16 +322,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         print("Screen touched")
         shoot()
     }
-    
+    // MARK: _____ Shoot function _____
     func shoot() {
+        let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
         var meteorNode = SCNNode()
-        let tempScene = SCNScene(named: "art.scnassets/meteor.scn")
-        meteorNode = tempScene!.rootNode
+        meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
+        
         meteorNode.scale = SCNVector3(0.0001, 0.0001, 0.0001)
         meteorNode.name = "Meteor"
         meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
         meteorNode.physicsBody?.isAffectedByGravity = false
         meteorNode.physicsBody?.categoryBitMask = 2
+        meteorNode.physicsBody?.collisionBitMask = 1
+        meteorNode.physicsBody?.contactTestBitMask = 1
         
         // MARK: _____ Getting the current position and direction of the camera _____
         guard let frame = sceneView.session.currentFrame
@@ -326,6 +342,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         let camMatrix = SCNMatrix4(frame.camera.transform)
         let direction = SCNVector3Make(-camMatrix.m31 * 5.0, -camMatrix.m32 * 5.0, -camMatrix.m33 * 5.0) //2
         let position = SCNVector3Make(camMatrix.m41, camMatrix.m42, camMatrix.m43) //3
+        print("Setting meteor start position to camera position")
         meteorNode.position = position
         
         //    meteorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 3, y: 2, z: 0, duration: 4)))
@@ -382,9 +399,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             let amountOfRocks = Int.random(in: 5..<20)
             for _ in 0...amountOfRocks {
                 
+                let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
                 var meteorNode = SCNNode()
-                let meteorScene = SCNScene(named: "art.scnassets/meteor.scn")
-                meteorNode = meteorScene!.rootNode
+                meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
                 
                 // Adjusting the debree size depending on how many parts there are
                 switch amountOfRocks {
