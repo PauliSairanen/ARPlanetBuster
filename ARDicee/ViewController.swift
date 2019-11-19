@@ -9,13 +9,45 @@
 import UIKit
 import SceneKit
 import ARKit
+import CoreData
+
+
+// MARK: _____ Global Variables _____
+
+class scoreToSave {
+    
+    var playerName = ""
+    var playerScore = 0
+    
+    init(playerName: String, playerScore: Int){
+        self.playerName = playerName
+        self.playerScore = playerScore
+    }
+}
+
 
 class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, ARSessionDelegate {
     
+    // Outlets
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var ammoCounterLabel: UILabel!
+    @IBOutlet weak var gameEndScreen: UIView!
+    @IBOutlet weak var yourScore: UILabel!
+    @IBOutlet weak var playerName: UILabel!
     
+    // Variables
+    var ammoCount = 20
+    var ammoCounterText = ""
+    var playerNameInGame = ""
+    var score = 0
+    
+    // Initiation
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setting the default ammo count onto screen
+        ammoCounterLabel.text = ammoCounterText
+        gameEndScreen.isHidden = true
         
         // sceneView.debugOptions = ARSCNDebugOptions.showWorldOrigin
         sceneView.showsStatistics = true
@@ -314,24 +346,54 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             if let planetRadius = (contact.nodeA.geometry as? SCNSphere)?.radius {
                 print("Explosion happens here!")
                 explosion(position: contact.nodeA.worldPosition, planetSize: planetRadius)
+                score = score + 1
                 contact.nodeA.parent!.removeFromParentNode()
                 contact.nodeB.removeFromParentNode()
             }
         }
         else {
             print("Node B = planet")
-            contact.nodeB.parent!.removeFromParentNode()
-            contact.nodeA.removeFromParentNode()
+            if let planetRadius = (contact.nodeB.geometry as? SCNSphere)?.radius {
+                print("Explosion happens here!")
+                explosion(position: contact.nodeB.worldPosition, planetSize: planetRadius)
+                score = score + 1
+                contact.nodeB.parent!.removeFromParentNode()
+                contact.nodeA.removeFromParentNode()
+            }
         }
     }
     
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        ammoCounterLabel.text = "Ammo count: \(ammoCount)"
+        checkIfGameEnds()
+    }
+    
+    func checkIfGameEnds () {
+        if (ammoCount <= 0) {
+            print("Game ends here :-)")
+            playerName.text = "Current player: \(playerNameInGame)"
+            yourScore.text = "Your score is: \(score)"
+            gameEndScreen.isHidden = false
+            
+//            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//            let newScore = scoreToSave(context: self.context)
+            
+            
+            
+            
+        }
+    }
+    
+
     // MARK: _____ Touch functions _____
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("Screen touched")
         shoot()
     }
     // MARK: _____ Shoot function _____
     func shoot() {
+        ammoCount = ammoCount - 1
+        
         let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
         var meteorNode = SCNNode()
         meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
@@ -350,7 +412,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         let camMatrix = SCNMatrix4(frame.camera.transform)
         let direction = SCNVector3Make(-camMatrix.m31 * 5.0, -camMatrix.m32 * 5.0, -camMatrix.m33 * 5.0) //2
         let position = SCNVector3Make(camMatrix.m41, camMatrix.m42, camMatrix.m43) //3
-        print("Setting meteor start position to camera position")
         meteorNode.position = position
         
         //    meteorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 3, y: 2, z: 0, duration: 4)))
@@ -359,7 +420,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         // MARK: _____ Removing projectiles from scene after a set amount of time _____
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            print("Removing projectile from scene")
             meteorNode.removeFromParentNode()
         }
     }
@@ -375,12 +435,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         exp.birthRate = 3000
         exp.emissionDuration = 0.0
         exp.particleLifeSpan = 5
-        
- //       exp.emitterShape = SCNSphere(radius: planetSize / 5)
-        
         // MARK: _____ Adjusting the explosion size according to planet radius _____
         exp.particleVelocity = 1.5 * planetSize
-    //    exp.particleColor = UIColor.white
         
         let explosionNode = SCNNode()
         let lightNode = SCNNode()
@@ -410,7 +466,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         self.sceneView.scene.rootNode.addChildNode(explosionNode)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
-            print("Removing explosion node from scene")
             explosionNode.removeFromParentNode()
             lightNode.removeFromParentNode()
         }
@@ -423,7 +478,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             let sizeFactor = 500.0
  
             for _ in 0...amountOfRocks {
-
                 let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
                 var meteorNode = SCNNode()
                 meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
@@ -432,37 +486,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                 
                 let debreeSize = Double(planetSize) / Double(amountOfRocks) / sizeFactor
                 meteorNode.scale = SCNVector3(debreeSize, debreeSize, debreeSize)
-                
-                
-//                switch amountOfRocks {
-//                case 0:
-//                    print("No rocks spawned")
-//
-//                    // Scale in shoot function = 0.0001
-//
-//                    // ToDo
-//
-//                    // 1. Calculate min and max size of debress parts
-//                    // 2. Randomize debreee size based on planet size and amount of debree spawned
-//
-//                case 5...10:
-//
-//                    let minSize = Double(planetSize) / Double(amountOfRocks) / sizeFactor
-//                    let maxSize = minSize + 5
-//                    let randomSize = CGFloat.random(in: 0.0001 ..< 0.0005)
-//                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
-//
-//                case 11...15:
-//                    let randomSize = CGFloat.random(in: 0.00005 ..< 0.00009)
-//                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
-//
-//                case 16...20:
-//                    let randomSize = CGFloat.random(in: 0.00001 ..< 0.00005)
-//                    meteorNode.scale = SCNVector3(randomSize, randomSize, randomSize)
-//
-//                default:
-//                    print("This is the default case")
-//                }
 
                 // MARK: _____ Giving the created debris physics _____
                 meteorNode.name = "Meteor"
@@ -478,9 +501,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
 
                 // MARK: _____ Removing projectiles from scene after a set amount of time _____
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                    print("Removing projectile from scene")
                     meteorNode.removeFromParentNode()
-
                 }
             }
         }
