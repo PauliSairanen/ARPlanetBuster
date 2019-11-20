@@ -18,14 +18,11 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         self.displayScores()
-
     }
     
     // Passing name from main view to game scene
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-        if segue.destination is ViewController
-        {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination is ViewController {
             let vc = segue.destination as? ViewController
             vc?.playerNameInGame = playerName
         }
@@ -45,12 +42,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     func displayScores() {
         let arrayOfScores = PlayerScore.getScores()
-         for element in arrayOfScores! {
-             print("PlayerName: \(element.playerName) Player score: \(element.playerScore)")
-         }
+        for element in arrayOfScores! {
+            print("PlayerName: \(element.playerName) Player score: \(element.playerScore)")
+        }
     }
-    
-    
- 
-    
 }
