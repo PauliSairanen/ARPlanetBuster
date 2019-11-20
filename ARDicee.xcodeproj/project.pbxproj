@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FA320F3B2383C7C60004F105 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA320F3A2383C7C60004F105 /* MainViewController.swift */; };
 		FA320F3E23840F460004F105 /* ScoreModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FA320F3C23840F460004F105 /* ScoreModel.xcdatamodeld */; };
+		FA320F402385431D0004F105 /* PlayerScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA320F3F2385431D0004F105 /* PlayerScore.swift */; };
 		FA895118235455A3005CE549 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA895117235455A3005CE549 /* AppDelegate.swift */; };
 		FA89511A235455A3005CE549 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = FA895119235455A3005CE549 /* art.scnassets */; };
 		FA89511C235455A3005CE549 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA89511B235455A3005CE549 /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		FA320F3A2383C7C60004F105 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FA320F3D23840F460004F105 /* ScoreModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ScoreModel.xcdatamodel; sourceTree = "<group>"; };
+		FA320F3F2385431D0004F105 /* PlayerScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScore.swift; sourceTree = "<group>"; };
 		FA895114235455A3005CE549 /* ARDicee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARDicee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA895117235455A3005CE549 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA895119235455A3005CE549 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 			children = (
 				FA895117235455A3005CE549 /* AppDelegate.swift */,
 				FA89511B235455A3005CE549 /* ViewController.swift */,
+				FA320F3F2385431D0004F105 /* PlayerScore.swift */,
 				FA320F3C23840F460004F105 /* ScoreModel.xcdatamodeld */,
 				FA89511D235455A3005CE549 /* Main.storyboard */,
 				FA320F3A2383C7C60004F105 /* MainViewController.swift */,
@@ -153,6 +156,7 @@
 				FA320F3B2383C7C60004F105 /* MainViewController.swift in Sources */,
 				FA89511C235455A3005CE549 /* ViewController.swift in Sources */,
 				FA895118235455A3005CE549 /* AppDelegate.swift in Sources */,
+				FA320F402385431D0004F105 /* PlayerScore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

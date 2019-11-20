@@ -95,6 +95,9 @@
                                         <rect key="frame" x="87" y="164" width="151" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Return to main screen"/>
+                                        <connections>
+                                            <action selector="returnToMainScreen:" destination="BV1-FR-VrT" eventType="touchUpInside" id="lTe-Xj-Png"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PlayerName" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dh9-O9-2bQ">
                                         <rect key="frame" x="61" y="62" width="223" height="43"/>

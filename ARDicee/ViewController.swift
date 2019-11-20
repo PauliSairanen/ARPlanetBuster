@@ -14,18 +14,6 @@ import CoreData
 
 // MARK: _____ Global Variables _____
 
-class scoreToSave {
-    
-    var playerName = ""
-    var playerScore = 0
-    
-    init(playerName: String, playerScore: Int){
-        self.playerName = playerName
-        self.playerScore = playerScore
-    }
-}
-
-
 class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, ARSessionDelegate {
     
     // Outlets
@@ -376,13 +364,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             yourScore.text = "Your score is: \(score)"
             gameEndScreen.isHidden = false
             
-//            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//            let newScore = scoreToSave(context: self.context)
-            
-            
+            // Saving player score
+            PlayerScore.saveScore(name: playerNameInGame, score: score)
+            print("Score saved!")
             
             
         }
+    }
+    
+    // Button to returnt to main Screen
+    @IBAction func returnToMainScreen(_ sender: Any) {
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
 

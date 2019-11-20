@@ -18,6 +18,14 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        var arrayOfScores = PlayerScore.getScores()
+        for element in arrayOfScores! {
+            print("PlayerName: \(element.playerName) Player score: \(element.playerScore)") 
+        }
+        
+        
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -44,5 +52,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
             
             performSegue(withIdentifier: "SequeToGame", sender: self)
         }
+        
+        
     }
 }
