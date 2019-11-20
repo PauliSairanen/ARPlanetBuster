@@ -18,10 +18,21 @@ class PlayerScore: Codable {
     }
     
     public static func saveScore(name: String, score: Int) {
-        var arrayOfScores = [PlayerScore]()
-        arrayOfScores.append(PlayerScore(name: name, score: score))
-        let scoreArray = try! JSONEncoder().encode(arrayOfScores)
-        UserDefaults.standard.set(scoreArray, forKey: "Score array")
+        
+        // If Array is there, append data to it and save
+        if  let dataFromStorage = UserDefaults.standard.data(forKey: "Score array") {
+            var playerScoreArray = try! JSONDecoder().decode([PlayerScore].self, from: dataFromStorage)
+            playerScoreArray.append(PlayerScore(name: name, score: score))
+            let scoreArray = try! JSONEncoder().encode(playerScoreArray)
+            UserDefaults.standard.set(scoreArray, forKey: "Score array")
+            }
+        // Else create a new array and append the scores to it
+        else {
+            var arrayOfScores = [PlayerScore]()
+            arrayOfScores.append(PlayerScore(name: name, score: score))
+            let scoreArray = try! JSONEncoder().encode(arrayOfScores)
+            UserDefaults.standard.set(scoreArray, forKey: "Score array")
+        }
     }
     
     public static func getScores() -> [PlayerScore]? {
@@ -43,10 +54,12 @@ class PlayerScore: Codable {
         }
         // If no array exits, create it
         else {
-            var arrayOfScores = [PlayerScore]()
+            let arrayOfScores = [PlayerScore]()
             let scoreArray = try! JSONEncoder().encode(arrayOfScores)
             UserDefaults.standard.set(scoreArray, forKey: "Score array")
-            getScores()
+            
+            // Assigning the result to remove compiler issue
+            _ = getScores()
         }
         return arrayToReturn
     }

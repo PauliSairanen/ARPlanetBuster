@@ -45,6 +45,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA320F41238563B30004F105 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FA320F3C23840F460004F105 /* ScoreModel.xcdatamodeld */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		FA320F42238563C00004F105 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FA89511D235455A3005CE549 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FA320F43238563C60004F105 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FA320F3A2383C7C60004F105 /* MainViewController.swift */,
+				FA89511B235455A3005CE549 /* ViewController.swift */,
+				FA895117235455A3005CE549 /* AppDelegate.swift */,
+				FA320F3F2385431D0004F105 /* PlayerScore.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		FA89510B235455A3005CE549 = {
 			isa = PBXGroup;
 			children = (
@@ -64,12 +91,9 @@
 		FA895116235455A3005CE549 /* ARDicee */ = {
 			isa = PBXGroup;
 			children = (
-				FA895117235455A3005CE549 /* AppDelegate.swift */,
-				FA89511B235455A3005CE549 /* ViewController.swift */,
-				FA320F3F2385431D0004F105 /* PlayerScore.swift */,
-				FA320F3C23840F460004F105 /* ScoreModel.xcdatamodeld */,
-				FA89511D235455A3005CE549 /* Main.storyboard */,
-				FA320F3A2383C7C60004F105 /* MainViewController.swift */,
+				FA320F43238563C60004F105 /* Controller */,
+				FA320F42238563C00004F105 /* View */,
+				FA320F41238563B30004F105 /* Model */,
 				FA895119235455A3005CE549 /* art.scnassets */,
 				FA895120235455A4005CE549 /* Assets.xcassets */,
 				FA895122235455A4005CE549 /* LaunchScreen.storyboard */,

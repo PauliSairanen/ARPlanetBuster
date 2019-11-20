@@ -9,7 +9,6 @@
 import UIKit
 import SceneKit
 import ARKit
-import CoreData
 
 
 // MARK: _____ Global Variables _____
@@ -28,6 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var ammoCounterText = ""
     var playerNameInGame = ""
     var score = 0
+    var gameHasEnded = false
     
     // Initiation
     override func viewDidLoad() {
@@ -353,27 +353,38 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        ammoCounterLabel.text = "Ammo count: \(ammoCount)"
+        DispatchQueue.main.async {
+            self.ammoCounterLabel.text = "Ammo count: \(self.ammoCount)"
+        }
         checkIfGameEnds()
     }
     
     func checkIfGameEnds () {
-        if (ammoCount <= 0) {
-            print("Game ends here :-)")
-            playerName.text = "Current player: \(playerNameInGame)"
-            yourScore.text = "Your score is: \(score)"
-            gameEndScreen.isHidden = false
-            
-            // Saving player score
-            PlayerScore.saveScore(name: playerNameInGame, score: score)
-            print("Score saved!")
-            
-            
+        
+        // ADD more to this IF:
+        // If ammotcount <= 0 AND last projective has been removed from scene
+        if (ammoCount <= 0 ) {
+            if(gameHasEnded == false) {
+                
+                print("Game ends here :-)")
+                // Enable score window after game ends
+                DispatchQueue.main.async{
+                    self.playerName.text = "Current player: \(self.playerNameInGame)"
+                    self.yourScore.text = "Your score is: \(self.score)"
+                    self.gameEndScreen.isHidden = false
+                }
+                // Saving player score
+                PlayerScore.saveScore(name: playerNameInGame, score: score)
+                print("Score saved!")
+                gameHasEnded = true
+            }
         }
     }
     
+    
     // Button to returnt to main Screen
     @IBAction func returnToMainScreen(_ sender: Any) {
+        gameHasEnded = true
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     

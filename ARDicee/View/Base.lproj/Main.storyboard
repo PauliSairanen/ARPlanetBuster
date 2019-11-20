@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2QJ-Rq-yRO">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="0JD-t7-gaJ">
+            <objects>
+                <viewController id="2QJ-Rq-yRO" customClass="MainViewController" customModule="ARDicee" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cfk-PB-OsG">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="cp4-vi-RAa">
+                                <rect key="frame" x="46" y="267" width="322" height="469"/>
+                                <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVl-F1-VQI">
+                                <rect key="frame" x="46" y="170" width="322" height="47"/>
+                                <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="26"/>
+                                <state key="normal" title="Start Game"/>
+                                <connections>
+                                    <action selector="startGameButton:" destination="2QJ-Rq-yRO" eventType="touchUpInside" id="dRO-Rc-Is9"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player name: " textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RVK-Gc-5QI">
+                                <rect key="frame" x="46" y="100" width="322" height="35"/>
+                                <accessibility key="accessibilityConfiguration" identifier="playerNameTextField"/>
+                                <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="17"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="trailing" secondItem="cp4-vi-RAa" secondAttribute="trailing" id="18u-zw-lFG"/>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="top" secondItem="tyg-Zr-Lsl" secondAttribute="top" constant="100" id="403-3x-WI1"/>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="leading" secondItem="cp4-vi-RAa" secondAttribute="leading" id="ASh-Wq-7fw"/>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="trailing" secondItem="RVl-F1-VQI" secondAttribute="trailing" id="HLu-bI-VPF"/>
+                            <constraint firstItem="cp4-vi-RAa" firstAttribute="bottom" secondItem="tyg-Zr-Lsl" secondAttribute="bottom" id="NF0-I5-PUn"/>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="leading" secondItem="RVl-F1-VQI" secondAttribute="leading" id="Pry-V3-F8s"/>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="leading" secondItem="tyg-Zr-Lsl" secondAttribute="leading" constant="46" id="bKC-lV-Xv3"/>
+                            <constraint firstItem="RVK-Gc-5QI" firstAttribute="centerX" secondItem="cfk-PB-OsG" secondAttribute="centerX" id="cbe-UK-DUZ"/>
+                            <constraint firstItem="RVl-F1-VQI" firstAttribute="top" secondItem="RVK-Gc-5QI" secondAttribute="bottom" constant="35" id="f8V-s4-uSO"/>
+                            <constraint firstItem="cp4-vi-RAa" firstAttribute="top" secondItem="RVl-F1-VQI" secondAttribute="bottom" constant="50" id="nbl-ra-6CM"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="tyg-Zr-Lsl"/>
+                    </view>
+                    <connections>
+                        <outlet property="playerNameTextField" destination="RVK-Gc-5QI" id="rMZ-5V-Ldz"/>
+                        <segue destination="BV1-FR-VrT" kind="presentation" identifier="SequeToGame" modalPresentationStyle="fullScreen" id="Zva-t9-huN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zvc-Xk-2OL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-759.20000000000005" y="116.74876847290641"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="tXr-a1-R10">
+            <objects>
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARDicee" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="U0K-SW-4ec">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
+                                <rect key="frame" x="0.0" y="-44" width="414" height="780"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </arscnView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="O" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IlS-Nd-lPT" userLabel="CrossHair">
+                                <rect key="frame" x="165.66666666666666" y="332" width="44.333333333333343" height="72"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ammo Count:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vgF-2n-8S9">
+                                <rect key="frame" x="94.999999999999986" y="626" width="185.66666666666663" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="Xoe-mD-5Pr"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xju-G3-GOh">
+                                <rect key="frame" x="25" y="274" width="325" height="231"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Ended" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yif-BP-SOP">
+                                        <rect key="frame" x="105.33333333333334" y="34" width="115" height="27"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="27" id="oWG-Uc-qN9"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zDK-iF-7F8">
+                                        <rect key="frame" x="87" y="164" width="151" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="c0s-DC-mDf"/>
+                                        </constraints>
+                                        <state key="normal" title="Return to main screen"/>
+                                        <connections>
+                                            <action selector="returnToMainScreen:" destination="BV1-FR-VrT" eventType="touchUpInside" id="lTe-Xj-Png"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PlayerName" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dh9-O9-2bQ">
+                                        <rect key="frame" x="47" y="69" width="223" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Your score: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vya-4L-ube">
+                                        <rect key="frame" x="54" y="109" width="216" height="47"/>
+                                        <fontDescription key="fontDescription" name="AppleColorEmoji" family="Apple Color Emoji" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="zDK-iF-7F8" secondAttribute="bottom" constant="37" id="AoA-gF-9wS"/>
+                                    <constraint firstItem="zDK-iF-7F8" firstAttribute="top" secondItem="Vya-4L-ube" secondAttribute="bottom" constant="8" id="Mr7-WD-dTz"/>
+                                    <constraint firstItem="Vya-4L-ube" firstAttribute="top" secondItem="Yif-BP-SOP" secondAttribute="bottom" constant="48" id="ZpW-l0-AGI"/>
+                                    <constraint firstItem="Yif-BP-SOP" firstAttribute="top" secondItem="xju-G3-GOh" secondAttribute="top" constant="34" id="bSZ-du-vKS"/>
+                                    <constraint firstItem="Vya-4L-ube" firstAttribute="centerX" secondItem="xju-G3-GOh" secondAttribute="centerX" id="cgS-Kr-plc"/>
+                                    <constraint firstItem="Vya-4L-ube" firstAttribute="centerX" secondItem="zDK-iF-7F8" secondAttribute="centerX" id="cxG-Yd-IgZ"/>
+                                    <constraint firstItem="Yif-BP-SOP" firstAttribute="centerX" secondItem="Vya-4L-ube" secondAttribute="centerX" id="itf-bp-ZLz"/>
+                                    <constraint firstItem="Vya-4L-ube" firstAttribute="leading" secondItem="xju-G3-GOh" secondAttribute="leading" constant="54" id="ppv-tX-EsQ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="IlS-Nd-lPT" firstAttribute="centerX" secondItem="vgF-2n-8S9" secondAttribute="centerX" id="BKv-5K-0Os"/>
+                            <constraint firstItem="xju-G3-GOh" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="230" id="Ijf-EE-Apo"/>
+                            <constraint firstItem="xju-G3-GOh" firstAttribute="centerX" secondItem="IlS-Nd-lPT" secondAttribute="centerX" id="MPc-c6-pa1"/>
+                            <constraint firstItem="IlS-Nd-lPT" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="165.66666666666666" id="RvL-Lm-kmo"/>
+                            <constraint firstItem="xju-G3-GOh" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="25" id="T9N-xl-aus"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="vgF-2n-8S9" secondAttribute="bottom" constant="68" id="TAT-G4-shX"/>
+                            <constraint firstItem="IlS-Nd-lPT" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="dSQ-G5-JOy"/>
+                            <constraint firstItem="vgF-2n-8S9" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="95" id="sbw-HV-fCf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="0lh-Cc-MrF"/>
+                    <connections>
+                        <outlet property="ammoCounterLabel" destination="vgF-2n-8S9" id="ojK-E7-bSd"/>
+                        <outlet property="gameEndScreen" destination="xju-G3-GOh" id="yHH-dC-QhE"/>
+                        <outlet property="playerName" destination="Dh9-O9-2bQ" id="fhC-1b-Pgc"/>
+                        <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="yourScore" destination="Vya-4L-ube" id="IfV-KR-kYw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="140" y="113.79310344827587"/>
+        </scene>
+    </scenes>
+</document>
