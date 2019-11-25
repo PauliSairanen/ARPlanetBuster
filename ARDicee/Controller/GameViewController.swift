@@ -32,6 +32,9 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
     var score = 0
     var gameHasEnded = false
     
+    var amountofMeteorsInScene = 0
+    var amountOfPlanetsInScene = 8
+    
     enum BodyType: Int {
         case planet = 1
         case projectile = 2
@@ -356,11 +359,13 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
             print("Sun cannot be deleted>:(")
             if (contact.nodeA.name == "Meteor") {
                 contact.nodeA.removeFromParentNode()
+                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
                 print("Meteor hit the sun. Meteor burned to crisp")
             }
             else {
                 contact.nodeB.removeFromParentNode()
                 print("Meteor hit the sun. Meteor burned to crisp")
+                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
             }
             return
         }
@@ -373,6 +378,8 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 print("Explosion happens here!")
                 explosion(position: contact.nodeA.worldPosition, planetSize: planetRadius)
                 score = score + 1
+                self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
+                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
                 contact.nodeA.parent!.removeFromParentNode()
                 contact.nodeB.removeFromParentNode()
             }
@@ -383,6 +390,8 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 print("Explosion happens here!")
                 explosion(position: contact.nodeB.worldPosition, planetSize: planetRadius)
                 score = score + 1
+                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
+                self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
                 contact.nodeB.parent!.removeFromParentNode()
                 contact.nodeA.removeFromParentNode()
             }
@@ -401,10 +410,14 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         
         // ADD more to this IF:
         // If ammotcount <= 0 AND last projective has been removed from scene
-        if (ammoCount <= 0 ) {
+        if (ammoCount <= 0 && amountofMeteorsInScene == 0 || amountOfPlanetsInScene == 0) {
             if(gameHasEnded == false) {
                 
                 print("Game ends here :-)")
+                
+                // Add remaining ammoCount to score
+                score = score + ammoCount
+                
                 // Enable score window after game ends
                 DispatchQueue.main.async{
                     self.playerName.text = "Current player: \(self.playerNameInGame)"
@@ -415,7 +428,6 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 PlayerScore.saveScore(name: playerNameInGame, score: score)
                 print("Score saved!")
                 gameHasEnded = true
-                
             }
         }
     }
@@ -439,36 +451,47 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
     }
     // MARK: _____ Shoot function _____
     func shoot() {
-        ammoCount = ammoCount - 1
         
-        let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
-        var meteorNode = SCNNode()
-        meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
-        
-        meteorNode.scale = SCNVector3(0.0001, 0.0001, 0.0001)
-        meteorNode.name = "Meteor"
-        meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-        meteorNode.physicsBody?.isAffectedByGravity = false
-        meteorNode.physicsBody?.categoryBitMask = 2
-        meteorNode.physicsBody?.collisionBitMask = 1
-        meteorNode.physicsBody?.contactTestBitMask = 1
-        
-        // MARK: _____ Getting the current position and direction of the camera _____
-        guard let frame = sceneView.session.currentFrame
-            else { return } //1
-        let camMatrix = SCNMatrix4(frame.camera.transform)
-        let direction = SCNVector3Make(-camMatrix.m31 * 5.0, -camMatrix.m32 * 5.0, -camMatrix.m33 * 5.0) //2
-        let position = SCNVector3Make(camMatrix.m41, camMatrix.m42, camMatrix.m43) //3
-        meteorNode.position = position
-        
-        //    meteorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 3, y: 2, z: 0, duration: 4)))
-        meteorNode.physicsBody?.applyForce (direction,  asImpulse: true)
-        sceneView.scene.rootNode.addChildNode(meteorNode)
-        
-        // MARK: _____ Removing projectiles from scene after a set amount of time _____
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            meteorNode.removeFromParentNode()
+        if ammoCount > 0 {
+            
+            ammoCount = ammoCount - 1
+            amountofMeteorsInScene = amountofMeteorsInScene + 1
+            
+            let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
+            var meteorNode = SCNNode()
+            meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
+            
+            meteorNode.scale = SCNVector3(0.0001, 0.0001, 0.0001)
+            meteorNode.name = "Meteor"
+            meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            meteorNode.physicsBody?.isAffectedByGravity = false
+            meteorNode.physicsBody?.categoryBitMask = 2
+            meteorNode.physicsBody?.collisionBitMask = 1
+            meteorNode.physicsBody?.contactTestBitMask = 1
+            
+            // MARK: _____ Getting the current position and direction of the camera _____
+            guard let frame = sceneView.session.currentFrame
+                else { return } //1
+            let camMatrix = SCNMatrix4(frame.camera.transform)
+            let direction = SCNVector3Make(-camMatrix.m31 * 5.0, -camMatrix.m32 * 5.0, -camMatrix.m33 * 5.0) //2
+            let position = SCNVector3Make(camMatrix.m41, camMatrix.m42, camMatrix.m43) //3
+            meteorNode.position = position
+            
+            //    meteorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 3, y: 2, z: 0, duration: 4)))
+            meteorNode.physicsBody?.applyForce (direction,  asImpulse: true)
+            sceneView.scene.rootNode.addChildNode(meteorNode)
+            
+            // MARK: _____ Removing projectiles from scene after a set amount of time _____
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                meteorNode.removeFromParentNode()
+                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
+            }
         }
+            
+        else {
+            print("No ammo left")
+        }
+        
     }
     
     func explosion(position: SCNVector3, planetSize: CGFloat) {
@@ -478,8 +501,8 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         exp.isAffectedByGravity = false
         exp.isLightingEnabled = true
         exp.birthDirection = .random
-        exp.particleSize = 0.009
-        exp.birthRate = 3000
+        exp.particleSize = 0.008
+        exp.birthRate = 5000
         exp.emissionDuration = 0.0
         exp.particleLifeSpan = 5
         // MARK: _____ Adjusting the explosion size according to planet radius _____
@@ -502,19 +525,19 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         let intensityAnimation = CABasicAnimation (keyPath: "light.intensity")
         intensityAnimation.fromValue = 10000
         intensityAnimation.toValue = 0
-        intensityAnimation.duration = 6
+        intensityAnimation.duration = 7
         lightNode.addAnimation(intensityAnimation, forKey: nil)
 
         let temperatureAnimation = CABasicAnimation (keyPath: "light.temperature")
-        temperatureAnimation.fromValue = 4800
-        temperatureAnimation.toValue = 1500
-        temperatureAnimation.duration = 6
+        temperatureAnimation.fromValue = 3500
+        temperatureAnimation.toValue = 1000
+        temperatureAnimation.duration = 7
         lightNode.addAnimation(temperatureAnimation, forKey: nil)
         
         self.sceneView.scene.rootNode.addChildNode(lightNode)
         self.sceneView.scene.rootNode.addChildNode(explosionNode)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             explosionNode.removeFromParentNode()
             lightNode.removeFromParentNode()
         }
