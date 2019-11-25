@@ -40,9 +40,9 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
     enum LightType: Int {
         case planetlight = 1    // ok
         case sunlight = 3       // ok
-        case spotlightForSun = 6 // ok
-        case particle = 9
-        case spotlightForParticles = 8
+        case spotlightForSun = 2 // ok
+        case particle = 12
+        case spotlightForParticles = 4
     }
     
     
@@ -495,13 +495,13 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         lightNode.categoryBitMask = LightType.spotlightForParticles.rawValue
         lightNode.light?.type = .area
         lightNode.position = position
+        lightNode.light?.attenuationStartDistance = planetSize / 2
         lightNode.light?.attenuationEndDistance = planetSize * 2
-        lightNode.light?.intensity = 20000
         
         // MARK: _____ Animating explosion _____
         let intensityAnimation = CABasicAnimation (keyPath: "light.intensity")
-        intensityAnimation.fromValue = 25000
-        intensityAnimation.toValue = 1000
+        intensityAnimation.fromValue = 10000
+        intensityAnimation.toValue = 0
         intensityAnimation.duration = 6
         lightNode.addAnimation(intensityAnimation, forKey: nil)
 
@@ -514,7 +514,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         self.sceneView.scene.rootNode.addChildNode(lightNode)
         self.sceneView.scene.rootNode.addChildNode(explosionNode)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
             explosionNode.removeFromParentNode()
             lightNode.removeFromParentNode()
         }
