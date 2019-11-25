@@ -32,6 +32,20 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
     var score = 0
     var gameHasEnded = false
     
+    enum BodyType: Int {
+        case planet = 1
+        case projectile = 2
+    }
+    
+    enum LightType: Int {
+        case planetlight = 1    // ok
+        case sunlight = 3       // ok
+        case spotlightForSun = 6 // ok
+        case particle = 9
+        case spotlightForParticles = 8
+    }
+    
+    
     // Delegate for sending data back to main screen
     var delegate: SendDataBackToMainViewProtocol? = nil
     
@@ -56,18 +70,10 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         sceneView.scene.physicsWorld.contactDelegate = self
         
         // MARK: _____ Disable default lighting in scene _____
-//        sceneView.autoenablesDefaultLighting = false
+        sceneView.autoenablesDefaultLighting = false
         
         // MARK: _____ Collision detection body types _____
-        enum BodyType: Int {
-            
-            case planet = 1
-            case projectile = 2
-            case sun = 3
-            case spotlightForSun = 6
-            case particle = 4
-            case spotlightForParticles = 7 // ok
-        }
+
         
         // MARK: ______ Creating planets as 3D objects _____
         let sun = SCNSphere(radius: 0.7)
@@ -127,7 +133,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         let spotlightForSun = SCNLight()
         spotlightForSun.type = .spot
         spotlightForSun.intensity = 5000
-        spotlightForSun.categoryBitMask = BodyType.spotlightForSun.rawValue
+        spotlightForSun.categoryBitMask = LightType.spotlightForSun.rawValue
         let spotLightForSunNode = SCNNode()
         spotLightForSunNode.light = spotlightForSun
         
@@ -136,9 +142,9 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationSun.name = "Sun"
         locationSun.position = SCNVector3(x: 0, y: 0.0, z: -10.0)
         locationSun.geometry = sun
+        locationSun.categoryBitMask = LightType.sunlight.rawValue
         locationSun.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
         locationSun.physicsBody!.isAffectedByGravity = false
-        locationSun.categoryBitMask = BodyType.sun.rawValue
         locationSun.physicsBody!.categoryBitMask = BodyType.planet.rawValue
         locationSun.physicsBody!.collisionBitMask = BodyType.projectile.rawValue
         locationSun.physicsBody!.contactTestBitMask = BodyType.projectile.rawValue
@@ -147,6 +153,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationMercury.name = "Mercury"
         locationMercury.position = SCNVector3(x: Float(sun.radius) + 1, y: 0, z: 0 )
         locationMercury.geometry = mercury
+        locationMercury.categoryBitMask = LightType.planetlight.rawValue
         locationMercury.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationMercury.physicsBody?.isAffectedByGravity = false
         locationMercury.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
@@ -157,6 +164,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationVenus.name = "Venus"
         locationVenus.position = SCNVector3(x: Float(sun.radius) + 2, y: 0, z: 0 )
         locationVenus.geometry = venus
+        locationVenus.categoryBitMask = LightType.planetlight.rawValue
         locationVenus.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationVenus.physicsBody?.isAffectedByGravity = false
         locationVenus.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
@@ -168,6 +176,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationEarth.name = "Earth"
         locationEarth.position = SCNVector3(x: Float(sun.radius) + 3, y: 0, z: 0 )
         locationEarth.geometry = earth
+        locationEarth.categoryBitMask = LightType.planetlight.rawValue
         locationEarth.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationEarth.physicsBody?.isAffectedByGravity = false
         locationEarth.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
@@ -178,6 +187,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationMars.name = "Mars"
         locationMars.position = SCNVector3(x: Float(sun.radius) + 3.5, y: 0, z: 0 )
         locationMars.geometry = mars
+        locationMars.categoryBitMask = LightType.planetlight.rawValue
         locationMars.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationMars.physicsBody?.isAffectedByGravity = false
         locationMars.physicsBody?.categoryBitMask = BodyType.planet.rawValue  // Defines the category where the shape belongs to
@@ -188,6 +198,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationJupiter.name = "Jupiter"
         locationJupiter.position = SCNVector3(x: Float(sun.radius) + 5, y: 0, z: 0)
         locationJupiter.geometry = jupiter
+        locationJupiter.categoryBitMask = LightType.planetlight.rawValue
         locationJupiter.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationJupiter.physicsBody?.isAffectedByGravity = false
         locationJupiter.physicsBody?.categoryBitMask = BodyType.planet.rawValue
@@ -198,6 +209,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationSaturn.name = "Saturn"
         locationSaturn.position = SCNVector3(x: Float(sun.radius) + 6, y: 0, z: 0)
         locationSaturn.geometry = saturn
+        locationSaturn.categoryBitMask = LightType.planetlight.rawValue
         locationSaturn.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationSaturn.physicsBody?.isAffectedByGravity = false
         locationSaturn.physicsBody?.categoryBitMask = BodyType.planet.rawValue
@@ -208,6 +220,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationUranus.name = "Uranus"
         locationUranus.position = SCNVector3(x: Float(sun.radius) + 7, y: 0, z: 0)
         locationUranus.geometry = uranus
+        locationUranus.categoryBitMask = LightType.planetlight.rawValue
         locationUranus.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationUranus.physicsBody?.isAffectedByGravity = false
         locationUranus.physicsBody?.categoryBitMask = BodyType.planet.rawValue
@@ -218,6 +231,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         locationNeptune.name = "Neptune"
         locationNeptune.position = SCNVector3(x: Float(sun.radius) + 8, y: 0, z: 0)
         locationNeptune.geometry = neptune
+        locationNeptune.categoryBitMask = LightType.planetlight.rawValue
         locationNeptune.physicsBody = SCNPhysicsBody(type: .kinematic, shape: nil)
         locationNeptune.physicsBody?.isAffectedByGravity = false
         locationNeptune.physicsBody?.categoryBitMask = BodyType.planet.rawValue
@@ -471,32 +485,22 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         // MARK: _____ Adjusting the explosion size according to planet radius _____
         exp.particleVelocity = 1.5 * planetSize
         
-        
-//        case planet = 1
-//        case projectile = 2
-//        case sun = 3
-//        case spotlightForSun = 6
-//        case particle = 4
-//        case spotlightForParticles = 8 // ok
-        
         let explosionNode = SCNNode()
-        let lightNode = SCNNode()
-        
-        // Light
-        lightNode.light = SCNLight()
-//        lightNode.light?.type = .spot
-        lightNode.position = position
-        lightNode.categoryBitMask = 7
-        lightNode.light?.attenuationEndDistance = planetSize * 2
-        
-        // Particles
         explosionNode.addParticleSystem(exp)
-//        explosionNode.categoryBitMask = 4
         explosionNode.position = position
+        explosionNode.categoryBitMask = LightType.particle.rawValue
+        
+        let lightNode = SCNNode()
+        lightNode.light = SCNLight()
+        lightNode.categoryBitMask = LightType.spotlightForParticles.rawValue
+        lightNode.light?.type = .area
+        lightNode.position = position
+        lightNode.light?.attenuationEndDistance = planetSize * 2
+        lightNode.light?.intensity = 20000
         
         // MARK: _____ Animating explosion _____
         let intensityAnimation = CABasicAnimation (keyPath: "light.intensity")
-        intensityAnimation.fromValue = 2500
+        intensityAnimation.fromValue = 25000
         intensityAnimation.toValue = 1000
         intensityAnimation.duration = 6
         lightNode.addAnimation(intensityAnimation, forKey: nil)
