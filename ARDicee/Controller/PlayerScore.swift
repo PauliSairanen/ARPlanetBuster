@@ -46,7 +46,9 @@ class PlayerScore: Codable {
             var sortedScoreArray = playerScoreArray.sorted(by: { $0.playerScore > $1.playerScore })
             
             // If array has more than 5 members, remove the last one
-            if  sortedScoreArray.count > 5 {
+            
+            while  sortedScoreArray.count > 5 {
+                print("Array is longer than 5. Last entry should be removed!")
                 sortedScoreArray.removeLast()
             }
             // Return the sorted array

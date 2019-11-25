@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  GameViewController.swift
 //  ARDicee
 //
 //  Created by Pauli Sairanen on 14/10/2019.
@@ -11,23 +11,30 @@ import SceneKit
 import ARKit
 
 
-// MARK: _____ Global Variables _____
+// MARK: _____ Protocols _____
+protocol SendDataBackToMainViewProtocol {
+    func sendDataBackToMainViewController(myData: Bool)
+}
 
-class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, ARSessionDelegate {
+class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate, ARSessionDelegate {
     
-    // Outlets
+    // MARK:  Outlets
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var ammoCounterLabel: UILabel!
     @IBOutlet weak var gameEndScreen: UIView!
     @IBOutlet weak var yourScore: UILabel!
     @IBOutlet weak var playerName: UILabel!
     
-    // Variables
+    // MARK: Variables
     var ammoCount = 20
     var ammoCounterText = ""
     var playerNameInGame = ""
     var score = 0
     var gameHasEnded = false
+    
+    // Delegate for sending data back to main screen
+    var delegate: SendDataBackToMainViewProtocol? = nil
+    
     
     // Initiation
     override func viewDidLoad() {
@@ -49,12 +56,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.scene.physicsWorld.contactDelegate = self
         
         // MARK: _____ Disable default lighting in scene _____
-        sceneView.autoenablesDefaultLighting = false
+//        sceneView.autoenablesDefaultLighting = false
         
         // MARK: _____ Collision detection body types _____
         enum BodyType: Int {
+            
             case planet = 1
             case projectile = 2
+            case sun = 3
+            case spotlightForSun = 6
+            case particle = 4
+            case spotlightForParticles = 7 // ok
         }
         
         // MARK: ______ Creating planets as 3D objects _____
@@ -108,7 +120,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         // MARK:_____ Creating points in space where the 3D objects will be shown at _____
         let sunLight = SCNLight()
         sunLight.type = .omni
-        sunLight.intensity = 2000
+        sunLight.intensity = 3000
+        sunLight.attenuationStartDistance = CGFloat(sun.radius)
+        sunLight.attenuationEndDistance = CGFloat(10)
+        
+        let spotlightForSun = SCNLight()
+        spotlightForSun.type = .spot
+        spotlightForSun.intensity = 5000
+        spotlightForSun.categoryBitMask = BodyType.spotlightForSun.rawValue
+        let spotLightForSunNode = SCNNode()
+        spotLightForSunNode.light = spotlightForSun
         
         let locationSun = SCNNode()
         locationSun.light = sunLight
@@ -117,6 +138,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         locationSun.geometry = sun
         locationSun.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
         locationSun.physicsBody!.isAffectedByGravity = false
+        locationSun.categoryBitMask = BodyType.sun.rawValue
         locationSun.physicsBody!.categoryBitMask = BodyType.planet.rawValue
         locationSun.physicsBody!.collisionBitMask = BodyType.projectile.rawValue
         locationSun.physicsBody!.contactTestBitMask = BodyType.projectile.rawValue
@@ -265,7 +287,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 7.9)))
         
         
-        // MARK: _____ Placing planet anchors as child components to the root _____
+        //  _____ Placing planet anchors as child components to the root _____
+        sceneView.scene.rootNode.addChildNode(spotLightForSunNode)
         sceneView.scene.rootNode.addChildNode(locationSun)
         sceneView.scene.rootNode.addChildNode(anchorLocationMercury)
         sceneView.scene.rootNode.addChildNode(anchorLocationVenus)
@@ -279,6 +302,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         sceneView.autoenablesDefaultLighting = true
     }
     
+    // MARK: _____ ARkit Functions _____
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -307,7 +331,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     }
     
     
-    // MARK: _____ Detecting collisions between objects _____
+    // MARK: _____ COLLISIONS _____
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         print("collision detected!")
         print("Node A: \(String(describing: contact.nodeA.name)) vs Node B: \(String(describing: contact.nodeB.name))")
@@ -351,7 +375,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         }
     }
     
-    
+    // MARK: _____ GAME FUNCTIONS _____
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async {
             self.ammoCounterLabel.text = "Ammo count: \(self.ammoCount)"
@@ -377,14 +401,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                 PlayerScore.saveScore(name: playerNameInGame, score: score)
                 print("Score saved!")
                 gameHasEnded = true
+                
             }
         }
     }
     
-    
+  
     // Button to returnt to main Screen
     @IBAction func returnToMainScreen(_ sender: Any) {
-        gameHasEnded = true
+        
+        if self.delegate != nil && gameHasEnded == true {
+            self.delegate?.sendDataBackToMainViewController(myData: gameHasEnded)
+            dismiss(animated: true, completion: nil)
+        }
+        
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
@@ -441,21 +471,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         // MARK: _____ Adjusting the explosion size according to planet radius _____
         exp.particleVelocity = 1.5 * planetSize
         
+        
+//        case planet = 1
+//        case projectile = 2
+//        case sun = 3
+//        case spotlightForSun = 6
+//        case particle = 4
+//        case spotlightForParticles = 8 // ok
+        
         let explosionNode = SCNNode()
         let lightNode = SCNNode()
         
+        // Light
         lightNode.light = SCNLight()
-        lightNode.light?.type = .omni
+//        lightNode.light?.type = .spot
         lightNode.position = position
-        lightNode.light?.intensity = 0
-
+        lightNode.categoryBitMask = 7
+        lightNode.light?.attenuationEndDistance = planetSize * 2
+        
+        // Particles
         explosionNode.addParticleSystem(exp)
+//        explosionNode.categoryBitMask = 4
         explosionNode.position = position
         
         // MARK: _____ Animating explosion _____
         let intensityAnimation = CABasicAnimation (keyPath: "light.intensity")
         intensityAnimation.fromValue = 2500
-        intensityAnimation.toValue = 0
+        intensityAnimation.toValue = 1000
         intensityAnimation.duration = 6
         lightNode.addAnimation(intensityAnimation, forKey: nil)
 
@@ -494,13 +536,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                 meteorNode.name = "Meteor"
                 meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
                 meteorNode.physicsBody?.isAffectedByGravity = false
-                print(position)
                 meteorNode.position = position
                 meteorNode.physicsBody?.applyForce (SCNVector3(CGFloat.random(in: -1 ..< 1), CGFloat.random(in: -1 ..< 1), CGFloat.random(in: -1 ..< 1)),  asImpulse: true)
 
                 // Adding the debris meteor into the scene
                 self.sceneView.scene.rootNode.addChildNode(meteorNode)
-                print(meteorNode.position)
 
                 // MARK: _____ Removing projectiles from scene after a set amount of time _____
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {

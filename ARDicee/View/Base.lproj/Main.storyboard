@@ -15,13 +15,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="cp4-vi-RAa">
-                                <rect key="frame" x="45" y="267" width="324" height="417.66666666666674"/>
-                                <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="cp4-vi-RAa" secondAttribute="height" multiplier="322:415" id="cT4-Kb-Wag"/>
-                                </constraints>
-                            </stackView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player name: " textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RVK-Gc-5QI">
                                 <rect key="frame" x="30" y="50" width="354" height="35"/>
                                 <accessibility key="accessibilityConfiguration" identifier="playerNameTextField"/>
@@ -42,23 +35,31 @@
                                     <action selector="startGameButton:" destination="2QJ-Rq-yRO" eventType="touchUpInside" id="dRO-Rc-Is9"/>
                                 </connections>
                             </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="MxE-zY-sL1">
+                                <rect key="frame" x="45" y="262" width="324" height="417"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="MxE-zY-sL1" secondAttribute="height" multiplier="108:139" id="h1W-bD-UzS"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="tyg-Zr-Lsl" firstAttribute="trailing" secondItem="cp4-vi-RAa" secondAttribute="trailing" constant="45" id="0qH-VK-jxk"/>
                             <constraint firstItem="RVl-F1-VQI" firstAttribute="leading" secondItem="tyg-Zr-Lsl" secondAttribute="leading" constant="50" id="45p-5c-VCt"/>
+                            <constraint firstItem="MxE-zY-sL1" firstAttribute="leading" secondItem="tyg-Zr-Lsl" secondAttribute="leading" constant="45" id="AbI-2L-nzL"/>
                             <constraint firstItem="RVK-Gc-5QI" firstAttribute="leading" secondItem="tyg-Zr-Lsl" secondAttribute="leading" constant="30" id="ArB-Ss-Ifc"/>
                             <constraint firstItem="RVl-F1-VQI" firstAttribute="top" secondItem="RVK-Gc-5QI" secondAttribute="bottom" constant="85" id="DgS-ni-8sf"/>
+                            <constraint firstItem="MxE-zY-sL1" firstAttribute="top" secondItem="RVl-F1-VQI" secondAttribute="bottom" constant="45" id="FvS-kp-err"/>
                             <constraint firstItem="tyg-Zr-Lsl" firstAttribute="trailing" secondItem="RVK-Gc-5QI" secondAttribute="trailing" constant="30" id="amc-8u-Lh5"/>
-                            <constraint firstItem="cp4-vi-RAa" firstAttribute="top" secondItem="RVl-F1-VQI" secondAttribute="bottom" constant="50" id="uW9-Qu-UD2"/>
                             <constraint firstItem="tyg-Zr-Lsl" firstAttribute="trailing" secondItem="RVl-F1-VQI" secondAttribute="trailing" constant="50" id="urf-61-Qye"/>
                             <constraint firstItem="RVK-Gc-5QI" firstAttribute="top" secondItem="tyg-Zr-Lsl" secondAttribute="top" constant="50" id="wtA-BD-pHm"/>
-                            <constraint firstItem="cp4-vi-RAa" firstAttribute="leading" secondItem="tyg-Zr-Lsl" secondAttribute="leading" constant="45" id="z0M-Vg-U6z"/>
+                            <constraint firstItem="tyg-Zr-Lsl" firstAttribute="trailing" secondItem="MxE-zY-sL1" secondAttribute="trailing" constant="45" id="xHq-wT-Xdi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="tyg-Zr-Lsl"/>
                     </view>
                     <connections>
                         <outlet property="playerNameTextField" destination="RVK-Gc-5QI" id="rMZ-5V-Ldz"/>
+                        <outlet property="scoreBoard" destination="MxE-zY-sL1" id="ibU-N0-7K8"/>
                         <segue destination="BV1-FR-VrT" kind="presentation" identifier="SequeToGame" modalPresentationStyle="fullScreen" id="Zva-t9-huN"/>
                     </connections>
                 </viewController>
@@ -66,10 +67,10 @@
             </objects>
             <point key="canvasLocation" x="-759.4202898550725" y="116.57608695652175"/>
         </scene>
-        <!--View Controller-->
+        <!--Game View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARDicee" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="ARDicee" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U0K-SW-4ec">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
