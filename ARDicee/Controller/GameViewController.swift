@@ -35,6 +35,15 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
     var amountofMeteorsInScene = 0
     var amountOfPlanetsInScene = 8
     
+    var MercuryHP = 1
+    var VenusHP = 1
+    var EarthHP = 1
+    var MarsHP = 1
+    var JupiterHP = 3
+    var SaturnHP = 3
+    var UranusHP = 2
+    var NeptuneHP = 2
+    
     enum BodyType: Int {
         case planet = 1
         case projectile = 2
@@ -75,8 +84,6 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         // MARK: _____ Disable default lighting in scene _____
         sceneView.autoenablesDefaultLighting = false
         
-        // MARK: _____ Collision detection body types _____
-
         
         // MARK: ______ Creating planets as 3D objects _____
         let sun = SCNSphere(radius: 0.7)
@@ -292,16 +299,16 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
 //        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 164.8)))
         
         // MARK: _____  Slower rotation _____
-        let fullRound = CGFloat(6.28318531)
-        let earthSpeed = 3.0
-        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.2)))
-        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.6)))
-        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
-        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
-        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 6.9)))
-        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 12.5)))
-        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.0)))
-        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 7.9)))
+//        let fullRound = CGFloat(6.28318531)
+//        let earthSpeed = 3.0
+//        anchorLocationMercury .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.2)))
+//        anchorLocationVenus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.6)))
+//        anchorLocationEarth .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed)))
+//        anchorLocationMars .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 1.9)))
+//        anchorLocationJupiter .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 6.9)))
+//        anchorLocationSaturn .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 12.5)))
+//        anchorLocationUranus .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 8.0)))
+//        anchorLocationNeptune .runAction(SCNAction .repeatForever(SCNAction .rotateBy(x: 0, y: fullRound, z: 0, duration: earthSpeed * 7.9)))
         
         
         //  _____ Placing planet anchors as child components to the root _____
@@ -375,24 +382,114 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
             
             // Get the radius of the NodeA
             if let planetRadius = (contact.nodeA.geometry as? SCNSphere)?.radius {
-                print("Explosion happens here!")
-                explosion(position: contact.nodeA.worldPosition, planetSize: planetRadius)
-                score = score + 1
-                self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
-                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
-                contact.nodeA.parent!.removeFromParentNode()
+                let planetName = contact.nodeA.name
+                var planetHP = 0
+                
+                switch planetName {
+                case "Mercurius":
+                    print("Entered case Mercury")
+                    planetHP = MercuryHP - 1
+                    MercuryHP = planetHP
+                case "Venus":
+                     print("Entered case Venus")
+                    planetHP = VenusHP - 1
+                    VenusHP = planetHP
+                case "Earth":
+                     print("Entered case Earth")
+                    planetHP = EarthHP - 1
+                    EarthHP = planetHP
+                case "Mars":
+                     print("Entered case Mars")
+                    planetHP = MarsHP - 1
+                    MarsHP = planetHP
+                case "Jupiter":
+                     print("Entered case Jupiter")
+                     planetHP = JupiterHP - 1
+                     JupiterHP = planetHP
+                case "Satrun":
+                     print("Entered case Saturn")
+                    planetHP = SaturnHP - 1
+                    SaturnHP = planetHP
+                case "Uranus":
+                     print("Entered case Uranus")
+                    planetHP = UranusHP - 1
+                    UranusHP = planetHP
+                case "Neptune":
+                     print("Entered case Neptune")
+                    planetHP = NeptuneHP - 1
+                    NeptuneHP = planetHP
+                    
+                default:
+                    print("This is default case")
+                }
+                print("planet name: \(String(describing: planetName)) planetHP: \(planetHP)")
+                
+                if planetHP <= 0 {
+                    
+                    print("Explosion happens here!")
+                    explosion(position: contact.nodeA.worldPosition, planetSize: planetRadius)
+                    score = score + 1
+                    self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
+                    self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
+                    contact.nodeA.parent!.removeFromParentNode()
+                }
                 contact.nodeB.removeFromParentNode()
             }
         }
         else {
             print("Node B = planet")
             if let planetRadius = (contact.nodeB.geometry as? SCNSphere)?.radius {
-                print("Explosion happens here!")
-                explosion(position: contact.nodeB.worldPosition, planetSize: planetRadius)
-                score = score + 1
-                self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
-                self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
-                contact.nodeB.parent!.removeFromParentNode()
+
+                let planetName = contact.nodeB.name
+                var planetHP = 0
+                
+                switch planetName {
+                case "Mercurius":
+                    print("Entered case Mercury")
+                    planetHP = MercuryHP - 1
+                    MercuryHP = planetHP
+                case "Venus":
+                     print("Entered case Venus")
+                    planetHP = VenusHP - 1
+                    VenusHP = planetHP
+                case "Earth":
+                     print("Entered case Earth")
+                    planetHP = EarthHP - 1
+                    EarthHP = planetHP
+                case "Mars":
+                     print("Entered case Mars")
+                    planetHP = MarsHP - 1
+                    MarsHP = planetHP
+                case "Jupiter":
+                     print("Entered case Jupiter")
+                     planetHP = JupiterHP - 1
+                     JupiterHP = planetHP
+                case "Satrun":
+                     print("Entered case Saturn")
+                    planetHP = SaturnHP - 1
+                    SaturnHP = planetHP
+                case "Uranus":
+                     print("Entered case Uranus")
+                    planetHP = UranusHP - 1
+                    UranusHP = planetHP
+                case "Neptune":
+                     print("Entered case Neptune")
+                    planetHP = NeptuneHP - 1
+                    NeptuneHP = planetHP
+                    
+                default:
+                    print("This is default case")
+                }
+                
+                if planetHP <= 0 {
+                    contact.nodeB.parent!.removeFromParentNode()
+                    score = score + 1
+                    self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
+                    self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
+                    
+                    print("Explosion happens here!")
+                    explosion(position: contact.nodeB.worldPosition, planetSize: planetRadius)
+                }
                 contact.nodeA.removeFromParentNode()
             }
         }
@@ -407,9 +504,6 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
     }
     
     func checkIfGameEnds () {
-        
-        // ADD more to this IF:
-        // If ammotcount <= 0 AND last projective has been removed from scene
         if (ammoCount <= 0 && amountofMeteorsInScene == 0 || amountOfPlanetsInScene == 0) {
             if(gameHasEnded == false) {
                 
@@ -465,9 +559,9 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
             meteorNode.name = "Meteor"
             meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             meteorNode.physicsBody?.isAffectedByGravity = false
-            meteorNode.physicsBody?.categoryBitMask = 2
-            meteorNode.physicsBody?.collisionBitMask = 1
-            meteorNode.physicsBody?.contactTestBitMask = 1
+            meteorNode.physicsBody?.categoryBitMask = BodyType.projectile.rawValue
+            meteorNode.physicsBody?.collisionBitMask = BodyType.planet.rawValue
+            meteorNode.physicsBody?.contactTestBitMask = BodyType.planet.rawValue
             
             // MARK: _____ Getting the current position and direction of the camera _____
             guard let frame = sceneView.session.currentFrame
@@ -550,6 +644,8 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
             let sizeFactor = 500.0
  
             for _ in 0...amountOfRocks {
+                self.amountofMeteorsInScene = self.amountOfPlanetsInScene + 1
+                
                 let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
                 var meteorNode = SCNNode()
                 meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
@@ -563,6 +659,9 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 meteorNode.name = "Meteor"
                 meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
                 meteorNode.physicsBody?.isAffectedByGravity = false
+                meteorNode.physicsBody?.categoryBitMask = BodyType.projectile.rawValue
+                meteorNode.physicsBody?.categoryBitMask = BodyType.planet.rawValue
+                meteorNode.physicsBody?.categoryBitMask = BodyType.planet.rawValue
                 meteorNode.position = position
                 meteorNode.physicsBody?.applyForce (SCNVector3(CGFloat.random(in: -1 ..< 1), CGFloat.random(in: -1 ..< 1), CGFloat.random(in: -1 ..< 1)),  asImpulse: true)
 
@@ -572,6 +671,7 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 // MARK: _____ Removing projectiles from scene after a set amount of time _____
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                     meteorNode.removeFromParentNode()
+                    self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
                 }
             }
         }
