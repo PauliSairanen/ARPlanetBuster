@@ -326,6 +326,10 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         sceneView.autoenablesDefaultLighting = true
     }
     
+    func createSolarSystem() {
+        
+    }
+    
     // MARK: _____ ARkit Functions _____
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -361,8 +365,12 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
         print("Node A: \(String(describing: contact.nodeA.name)) vs Node B: \(String(describing: contact.nodeB.name))")
         print("Node A bitmask: \(contact.nodeA.physicsBody!.categoryBitMask) vs NodeB: \(contact.nodeB.physicsBody!.categoryBitMask)")
         
-        // Removing node from view
-        if (contact.nodeA.name == "Sun" || contact.nodeB.name == "Sun") {
+        if (contact.nodeA.name == "Meteor" && contact.nodeB.name == "Meteor") {
+            print("node A is \(String(describing: contact.nodeA.name)) Node B is \( String(describing: contact.nodeB.name))" )
+            return
+        }
+        
+        else if (contact.nodeA.name == "Sun" || contact.nodeB.name == "Sun") {
             print("Sun cannot be deleted>:(")
             if (contact.nodeA.name == "Meteor") {
                 contact.nodeA.removeFromParentNode()
@@ -425,13 +433,13 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 print("planet name: \(String(describing: planetName)) planetHP: \(planetHP)")
                 
                 if planetHP <= 0 {
-                    
+                    contact.nodeA.parent!.removeFromParentNode()
                     print("Explosion happens here!")
                     explosion(position: contact.nodeA.worldPosition, planetSize: planetRadius)
                     score = score + 1
                     self.amountOfPlanetsInScene = self.amountOfPlanetsInScene - 1
                     self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
-                    contact.nodeA.parent!.removeFromParentNode()
+
                 }
                 contact.nodeB.removeFromParentNode()
             }
@@ -551,11 +559,11 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
             ammoCount = ammoCount - 1
             amountofMeteorsInScene = amountofMeteorsInScene + 1
             
-            let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
+            let sceneWith3DObject = SCNScene (named: "art.scnassets/asteroid.scn")
             var meteorNode = SCNNode()
             meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
             
-            meteorNode.scale = SCNVector3(0.0001, 0.0001, 0.0001)
+            meteorNode.scale = SCNVector3(0.05, 0.05, 0.05)
             meteorNode.name = "Meteor"
             meteorNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
             meteorNode.physicsBody?.isAffectedByGravity = false
@@ -570,8 +578,6 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
             let direction = SCNVector3Make(-camMatrix.m31 * 5.0, -camMatrix.m32 * 5.0, -camMatrix.m33 * 5.0) //2
             let position = SCNVector3Make(camMatrix.m41, camMatrix.m42, camMatrix.m43) //3
             meteorNode.position = position
-            
-            //    meteorNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 3, y: 2, z: 0, duration: 4)))
             meteorNode.physicsBody?.applyForce (direction,  asImpulse: true)
             sceneView.scene.rootNode.addChildNode(meteorNode)
             
@@ -581,11 +587,9 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
                 self.amountofMeteorsInScene = self.amountofMeteorsInScene - 1
             }
         }
-            
         else {
             print("No ammo left")
         }
-        
     }
     
     func explosion(position: SCNVector3, planetSize: CGFloat) {
@@ -641,12 +645,12 @@ class GameViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContact
 
             // Random value for how many debree parts will be spawned from explosion
             let amountOfRocks = Int.random(in: 5..<20)
-            let sizeFactor = 500.0
+            let sizeFactor = 1.0
  
             for _ in 0...amountOfRocks {
                 self.amountofMeteorsInScene = self.amountOfPlanetsInScene + 1
                 
-                let sceneWith3DObject = SCNScene (named: "art.scnassets/meteor.scn")
+                let sceneWith3DObject = SCNScene (named: "art.scnassets/asteroid.scn")
                 var meteorNode = SCNNode()
                 meteorNode = (sceneWith3DObject?.rootNode.childNode(withName: "MeteorObject", recursively: true))!
 

@@ -12,7 +12,7 @@ class PlayerScore: Codable {
     var playerName : String = ""
     var playerScore : Int = 0
     
-    init(name: String, score: Int){
+    init(name: String, score: Int) {
         self.playerName = name
         self.playerScore = score
     }
@@ -51,8 +51,14 @@ class PlayerScore: Codable {
                 print("Array is longer than 5. Last entry should be removed!")
                 sortedScoreArray.removeLast()
             }
+            
+            // Ovverride the array in the database with the sorted array :-)
+            let arrayToSave = try! JSONEncoder().encode(sortedScoreArray)
+            UserDefaults.standard.set(arrayToSave, forKey: "Score array")
+            
             // Return the sorted array
             arrayToReturn = sortedScoreArray
+        
         }
         // If no array exits, create it
         else {
